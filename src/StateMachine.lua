@@ -61,6 +61,6 @@ function StateMachine:update(dt)
     self.current:update(dt)
 end
 
-function StateMachine:draw()
-    self.current:draw()
+function StateMachine:render()
+    self.current:render()
 end
