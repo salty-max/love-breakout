@@ -13,9 +13,16 @@ Class = require 'lib/class'
 -- centralized global constants
 require 'src/constants'
 
+-- utility functions
+require 'src/Util'
+
 -- basic state machine
 require 'src/StateMachine'
 
+-- paddle
+require 'src/Paddle'
+
 -- states
 require 'src/states/BaseState'
+require 'src/states/PlayState'
 require 'src/states/StartState'
