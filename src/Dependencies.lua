@@ -19,8 +19,9 @@ require 'src/Util'
 -- basic state machine
 require 'src/StateMachine'
 
--- paddle
+-- entities
 require 'src/Paddle'
+require 'src/Ball'
 
 -- states
 require 'src/states/BaseState'

@@ -37,7 +37,8 @@ function love.load()
 
     -- Quads generated for all textures
     gFrames = {
-        ['paddles'] = GenerateQuadsPaddles(gTextures['main'])
+        ['paddles'] = GenerateQuadsPaddles(gTextures['main']),
+        ['balls'] = GenerateQuadsBalls(gTextures['main']),
     }
 
     -- initialize virtual resolution
