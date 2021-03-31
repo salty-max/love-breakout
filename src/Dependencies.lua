@@ -29,5 +29,7 @@ require 'src/Brick'
 
 -- states
 require 'src/states/BaseState'
-require 'src/states/PlayState'
 require 'src/states/StartState'
+require 'src/states/ServeState'
+require 'src/states/PlayState'
+require 'src/states/GameOverState'

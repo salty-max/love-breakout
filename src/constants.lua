@@ -16,3 +16,6 @@ VIRTUAL_HEIGHT = 243
 
 -- paddle movement speed
 PADDLE_SPEED = 200
+
+STARTING_HEALTH = 3
+SCORE_PER_HIT = 25

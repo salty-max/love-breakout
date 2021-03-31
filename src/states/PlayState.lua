@@ -9,22 +9,17 @@
 -- extends BaseState
 PlayState = Class{__includes = BaseState}
 
-function PlayState:init()
-    self.paddle = Paddle()
-
-    -- initialize ball with skin #1
-    self.ball = Ball(1)
-
-    -- position the ball in the center
-    self.ball.x = VIRTUAL_WIDTH / 2 - self.ball.width
-    self.ball.y = VIRTUAL_HEIGHT - 42
+function PlayState:enter(params)
+    -- get game state from serve state
+    self.paddle = params.paddle
+    self.ball = params.ball
+    self.bricks = params.bricks
+    self.health = params.health
+    self.score = params.score
 
     -- give ball random starting velocity
     self.ball.dx = math.random(-200, 200)
     self.ball.dy = math.random(-50, -60)
-
-    -- use the static createMap function to generate a brick layout
-    self.bricks = LevelMaker.createMap()
 end
 
 function PlayState:update(dt)
@@ -32,12 +27,14 @@ function PlayState:update(dt)
         if love.keyboard.wasPressed('space') then
             self.paused = false
             gSounds['pause']:play()
+            gSounds['music']:play()
         else
             return
         end
     elseif love.keyboard.wasPressed('space') then
         self.paused = true
         gSounds['pause']:play()
+        gSounds['music']:pause()
         return
     end
 
@@ -71,6 +68,7 @@ function PlayState:update(dt)
     for k, brick in pairs(self.bricks) do
         -- only check for bricks in play
         if brick.inPlay and self.ball:collides(brick) then
+            self.score = self.score + SCORE_PER_HIT
             brick:hit()
             --
             -- brick collision code
@@ -109,6 +107,25 @@ function PlayState:update(dt)
         end
     end
 
+    -- if ball goes below bottom edge, revet to serve state and decrease health
+    if self.ball.y >= VIRTUAL_HEIGHT + self.ball.height then
+        self.health = self.health - 1
+        gSounds['hurt']:play()
+
+        if self.health == 0 then
+            gStateMachine:change('game-over', {
+                score = self.score
+            })
+        else
+            gStateMachine:change('serve', {
+                paddle = self.paddle,
+                bricks = self.bricks,
+                health = self.health,
+                score = self.score
+            })
+        end
+    end
+
     if love.keyboard.wasPressed('escape') then
         love.event.quit()
     end
@@ -122,6 +139,9 @@ function PlayState:render()
 
     self.paddle:render()
     self.ball:render()
+
+    renderHealth(self.health)
+    renderScore(self.score)
 
     -- pause text, if paused
     if self.paused then
