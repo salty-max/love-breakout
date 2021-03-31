@@ -19,9 +19,13 @@ require 'src/Util'
 -- basic state machine
 require 'src/StateMachine'
 
+-- level maker
+require 'src/LevelMaker'
+
 -- entities
 require 'src/Paddle'
 require 'src/Ball'
+require 'src/Brick'
 
 -- states
 require 'src/states/BaseState'

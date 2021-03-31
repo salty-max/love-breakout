@@ -50,6 +50,15 @@ function table.slice(tbl, first, last, step)
 end
 
 --[[
+    This function is specifically made to piece out the bricks from the
+    sprite sheet. Since the sprite sheet has non-uniform sprites within,
+    it returns a subset of GenerateQuads.
+--]]
+function GenerateQuadsBricks(atlas)
+    return table.slice(GenerateQuads(atlas, 32, 16), 1 ,21)
+end
+
+--[[
     This function is specifically made to piece out the paddles from the
     sprite sheet. It has to be done a bit more manually, since they are
     all different sizes.
