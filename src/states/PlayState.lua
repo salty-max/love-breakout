@@ -47,8 +47,23 @@ function PlayState:update(dt)
 
     -- detect collision between ball and paddle
     if self.ball:collides(self.paddle) then
+        -- raise ball above paddle to avoid infinite collision
+        self.ball.y = self.paddle.y - 8
         -- reverse ball Y velocity
         self.ball.dy = -self.ball.dy
+
+        --
+        -- tweak angle of bounce based on where it hits the paddle
+        --
+
+        -- if it hits the paddle on its left side while moving left...
+        if self.ball.x < self.paddle.x + (self.paddle.width / 2) and self.paddle.dx < 0 then
+            self.ball.dx = -50 + -(8 * (self.paddle.x + self.paddle.width / 2 - self.ball.x))
+        -- else if it hits the paddle on its right side while moving right...
+        elseif self.ball.x > self.paddle.x + (self.paddle.width / 2) and self.paddle.dx > 0 then
+            self.ball.dx = 50 + (8 * math.abs(self.paddle.x + self.paddle.width / 2 - self.ball.x))
+        end
+
         gSounds['paddle-hit']:play()
     end
 
@@ -57,6 +72,40 @@ function PlayState:update(dt)
         -- only check for bricks in play
         if brick.inPlay and self.ball:collides(brick) then
             brick:hit()
+            --
+            -- brick collision code
+            --
+            -- check to see of the opposite side of the ball velocity is outside the brick
+            -- if it is, trigger a collision on that side. else check to see if the top or
+            -- bottom edge is outside the brick, colliding on top or bottom accordingly
+            --
+
+            -- left edge: only check if moving right
+            if self.ball.x + 2 < brick.x and self.ball.dx > 0 then
+                -- flip x velocity and reset position outside the brick
+                self.ball.dx = -self.ball.dx
+                self.ball.x = brick.x - self.ball.width
+            -- right edge; only check if moving left
+            elseif self.ball.x + 6 > brick.x + brick.width and self.ball.dx < 0 then
+                -- flip x velocity and reset position outside the brick
+                self.ball.dx = -self.ball.dx
+                self.ball.x = brick.x + brick.width
+            -- top edge if no X collisions; always check
+            elseif self.ball.y < brick.y then
+                -- flip y velocity and reset position outside the brick
+                self.ball.dy = -self.ball.dy
+                self.ball.y = brick.y - self.ball.height
+            -- bottom edge; if none of the above; always check
+            else
+                self.ball.dy = -self.ball.dy
+                self.ball.y = brick.y + brick.height
+            end
+
+            -- slightly scale the y velocity to speed up the game
+            self.ball.dy = self.ball.dy * 1.02
+
+            -- only allow collision with one brick, for corners
+            break
         end
     end
 
