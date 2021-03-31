@@ -16,6 +16,7 @@ function PlayState:enter(params)
     self.bricks = params.bricks
     self.health = params.health
     self.score = params.score
+    self.level = params.level
 
     -- give ball random starting velocity
     self.ball.dx = math.random(-200, 200)
@@ -68,7 +69,7 @@ function PlayState:update(dt)
     for k, brick in pairs(self.bricks) do
         -- only check for bricks in play
         if brick.inPlay and self.ball:collides(brick) then
-            self.score = self.score + SCORE_PER_HIT
+            self.score = self.score + BASE_SCORE_PER_HIT
             brick:hit()
             --
             -- brick collision code
@@ -121,7 +122,8 @@ function PlayState:update(dt)
                 paddle = self.paddle,
                 bricks = self.bricks,
                 health = self.health,
-                score = self.score
+                score = self.score,
+                level = self.level
             })
         end
     end
