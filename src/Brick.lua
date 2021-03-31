@@ -28,8 +28,32 @@ end
 --]]
 function Brick:hit()
     -- sound on hit
+    gSounds['brick-hit-2']:stop()
     gSounds['brick-hit-2']:play()
-    self.inPlay = false
+    
+    -- if brick is at a higher tier than the base, go down a tier
+    -- if it is already at the lowest color, go down a color
+    if self.tier > 0 then
+        if self.color == 1 then
+            self.tier = self.tier - 1
+            self.color = 5
+        else
+            self.color = self.color - 1
+        end
+    else
+        -- if brick is at the first tier and the base color, remove it
+        if self.color == 1 then
+            self.inPlay = false
+        else
+            self.color = self.color - 1
+        end
+    end
+
+    -- play a second layer sound if brick is destroyed
+    if not self.inPlay then
+        gSounds['brick-hit-1']:stop()
+        gSounds['brick-hit-1']:play()
+    end
 end
 
 function Brick:render()

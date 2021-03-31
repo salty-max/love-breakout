@@ -69,7 +69,9 @@ function PlayState:update(dt)
     for k, brick in pairs(self.bricks) do
         -- only check for bricks in play
         if brick.inPlay and self.ball:collides(brick) then
-            self.score = self.score + BASE_SCORE_PER_HIT
+            -- add to score
+            self.score = self.score + (brick.tier * BASE_SCORE_PER_TIER + brick.color * BASE_SCORE_PER_COLOR)
+            
             brick:hit()
             --
             -- brick collision code
