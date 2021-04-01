@@ -16,6 +16,7 @@ function VictoryState:enter(params)
     self.ball = params.ball
     self.health = params.health
     self.highScores = params.highScores
+    self.recoverPoints = params.recoverPoints
 end
 
 function VictoryState:update(dt)
@@ -33,7 +34,8 @@ function VictoryState:update(dt)
             health = self.health,
             paddle = self.paddle,
             bricks = LevelMaker.createMap(self.level + 1),
-            highScores = self.highScores
+            highScores = self.highScores,
+            recoverPoints = self.recoverPoints
         })
     end
 end

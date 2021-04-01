@@ -18,6 +18,7 @@ function PlayState:enter(params)
     self.score = params.score
     self.level = params.level
     self.highScores = params.highScores
+    self.recoverPoints = params.recoverPoints
 
     -- give ball random starting velocity
     self.ball.dx = math.random(-200, 200)
@@ -77,6 +78,16 @@ function PlayState:update(dt)
 
             brick:hit()
 
+            -- recover health if enough points
+            if self.score > self.recoverPoints then
+                self.health = math.min(MAX_HEALTH, self.health + 1)
+
+                -- multiply threshold by 2
+                self.recoverPoints = math.min(100000, self.recoverPoints * 2)
+
+                gSounds['recover']:play()
+            end
+
             -- go to victory screen if there are no more bricks left
             if self:checkVictory() then
                 gSounds['victory']:play()
@@ -87,7 +98,8 @@ function PlayState:update(dt)
                     health = self.health,
                     score = self.score,
                     ball = self.ball,
-                    highScores = self.highScores
+                    highScores = self.highScores,
+                    recoverPoints = self.recoverPoints
                 })
             end
 
@@ -145,7 +157,8 @@ function PlayState:update(dt)
                 health = self.health,
                 score = self.score,
                 level = self.level,
-                highScores = self.highScores
+                highScores = self.highScores,
+                recoverPoints = self.recoverPoints
             })
         end
     end
@@ -168,6 +181,8 @@ function PlayState:render()
     renderHealth(self.health)
     renderScore(self.score)
     renderLevel(self.level)
+
+    love.graphics.print(tostring(self.recoverPoints), 5, 60)
 
     -- pause text, if paused
     if self.paused then
