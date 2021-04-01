@@ -67,11 +67,13 @@ function PlayState:update(dt)
 
     -- detect collision across all bricks with the ball
     for k, brick in pairs(self.bricks) do
+        -- update particle system for this brick
+        brick:update(dt)
         -- only check for bricks in play
         if brick.inPlay and self.ball:collides(brick) then
             -- add to score
             self.score = self.score + (brick.tier * BASE_SCORE_PER_TIER + brick.color * BASE_SCORE_PER_COLOR)
-            
+
             brick:hit()
             --
             -- brick collision code
@@ -139,6 +141,7 @@ function PlayState:render()
     -- render bricks
     for k, brick in pairs(self.bricks) do
         brick:render()
+        brick:renderParticles()
     end
 
     self.paddle:render()
