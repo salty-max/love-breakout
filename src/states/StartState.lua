@@ -12,6 +12,10 @@ StartState = Class{__includes = BaseState}
 -- highlighted menu item
 local highlighted = 1
 
+function StartState:enter(params)
+    self.highScores = params.highScores
+end
+
 function StartState:update(dt)
     -- toggle highlighted item if up or down is pressed
     if love.keyboard.wasPressed('up') or love.keyboard.wasPressed('down') then
@@ -21,13 +25,14 @@ function StartState:update(dt)
 
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
         gSounds['confirm']:play()
+
         if highlighted == 1 then
-            gStateMachine:change('serve', {
-                paddle = Paddle(1),
-                bricks = LevelMaker.createMap(1),
-                health = STARTING_HEALTH,
-                score = 0,
-                level = 1
+            gStateMachine:change('paddle-select', {
+                highScores = self.highScores
+            })
+        else
+            gStateMachine:change('high-scores', {
+                highScores = self.highScores
             })
         end
     end

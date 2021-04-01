@@ -15,6 +15,7 @@ function VictoryState:enter(params)
     self.paddle = params.paddle
     self.ball = params.ball
     self.health = params.health
+    self.highScores = params.highScores
 end
 
 function VictoryState:update(dt)
@@ -27,11 +28,12 @@ function VictoryState:update(dt)
     -- go to play state if enter is pressed
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
         gStateMachine:change('serve', {
-        level = self.level + 1,
-        score = self.score,
-        health = self.health,
-        paddle = self.paddle,
-        bricks = LevelMaker.createMap(self.level + 1)
+            level = self.level + 1,
+            score = self.score,
+            health = self.health,
+            paddle = self.paddle,
+            bricks = LevelMaker.createMap(self.level + 1),
+            highScores = self.highScores
         })
     end
 end

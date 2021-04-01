@@ -16,6 +16,7 @@ function ServeState:enter(params)
     self.health = params.health
     self.score = params.score
     self.level = params.level
+    self.highScores = params.highScores
 
     -- init new ball (random color for fun)
     self.ball = Ball()
@@ -37,6 +38,7 @@ function ServeState:update(dt)
             health = self.health,
             score = self.score,
             level = self.level,
+            highScores = self.highScores
         })
     end
 
@@ -60,7 +62,7 @@ function ServeState:render()
     love.graphics.setFont(gFonts['large'])
     love.graphics.printf('Level ' .. tostring(self.level), 0, VIRTUAL_HEIGHT / 3,
         VIRTUAL_WIDTH, 'center')
-        
+
     love.graphics.setFont(gFonts['medium'])
     love.graphics.printf('Press Enter to serve!', 0, VIRTUAL_HEIGHT / 2,
         VIRTUAL_WIDTH, 'center')
