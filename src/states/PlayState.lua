@@ -114,10 +114,12 @@ function PlayState:update(dt)
 
                 brick:hit()
 
-                -- recover health if enough points
+                -- recover health and expand paddle if enough points
                 if self.score > self.recoverPoints then
                     self.health = math.min(MAX_HEALTH, self.health + 1)
-
+                    if self.paddle.size < 4 then
+                        self.paddle.size = self.paddle.size + 1
+                    end
                     -- multiply threshold by 2
                     self.recoverPoints = math.min(100000, self.recoverPoints * 2)
 
@@ -232,8 +234,6 @@ function PlayState:render()
     renderHealth(self.health)
     renderScore(self.score)
     renderLevel(self.level)
-
-    love.graphics.print(tostring(self.recoverPoints), 5, 60)
 
     -- pause text, if paused
     if self.paused then
