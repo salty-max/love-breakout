@@ -45,6 +45,7 @@ function PaddleSelectState:update(dt)
             health = MAX_HEALTH,
             score = 0,
             highScores = self.highScores,
+            playerHasKey = false,
             level = 1,
             recoverPoints = BASE_RECOVER_POINTS
         })

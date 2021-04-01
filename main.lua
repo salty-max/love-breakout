@@ -30,16 +30,18 @@ function love.load()
     gTextures = {
         ['background'] = love.graphics.newImage('graphics/background.png'),
         ['main'] = love.graphics.newImage('graphics/breakout.png'),
+        ['bricks'] = love.graphics.newImage('graphics/bricks.png'),
         ['arrows'] = love.graphics.newImage('graphics/arrows.png'),
         ['hearts'] = love.graphics.newImage('graphics/hearts.png'),
-        ['particle'] = love.graphics.newImage('graphics/particle.png')
+        ['particle'] = love.graphics.newImage('graphics/particle.png'),
+        ['key'] = love.graphics.newImage('graphics/key.png')
     }
 
     -- Quads generated for all textures
     gFrames = {
         ['paddles'] = GenerateQuadsPaddles(gTextures['main']),
         ['balls'] = GenerateQuadsBalls(gTextures['main']),
-        ['bricks'] = GenerateQuadsBricks(gTextures['main']),
+        ['bricks'] = GenerateQuadsBricks(gTextures['bricks']),
         ['powerups'] = GenerateQuadsPowerUps(gTextures['main']),
         ['hearts'] = GenerateQuads(gTextures['hearts'], 10, 9),
         ['arrows'] = GenerateQuads(gTextures['arrows'], 24, 24)
@@ -62,6 +64,8 @@ function love.load()
         ['no-select'] = love.audio.newSource('sounds/no-select.wav', 'static'),
         ['brick-hit-1'] = love.audio.newSource('sounds/brick-hit-1.wav', 'static'),
         ['brick-hit-2'] = love.audio.newSource('sounds/brick-hit-2.wav', 'static'),
+        ['locked'] = love.audio.newSource('sounds/locked.wav', 'static'),
+        ['powerup'] = love.audio.newSource('sounds/powerup.wav', 'static'),
         ['hurt'] = love.audio.newSource('sounds/hurt.wav', 'static'),
         ['victory'] = love.audio.newSource('sounds/victory.wav', 'static'),
         ['recover'] = love.audio.newSource('sounds/recover.wav', 'static'),
@@ -230,6 +234,13 @@ function renderLevel(level)
     love.graphics.setFont((gFonts['small']))
     love.graphics.print('Level ', 5, 5)
     love.graphics.print(tostring(level), 30, 5)
+end
+
+--[[
+    Renders a key if the player has one.
+--]]
+function renderKey(level)
+    love.graphics.draw(gTextures['key'], 40, 5)
 end
 
 --[[

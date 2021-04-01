@@ -57,6 +57,8 @@ function LevelMaker.createMap(level)
         local skipFlag = math.random(2) == 1 and true or false
         -- used only for alternating a brick
         local alternateFlag = math.random(2) == 1 and true or false
+        -- use only for locked bricks
+        local lockedFlag = math.random(2) == 1 and true or false
 
         -- solid color used of not alternatig
         local solidColor = math.random(1, highestColor)
@@ -103,6 +105,12 @@ function LevelMaker.createMap(level)
                 b.tier = solidTier
             end
 
+            -- the brick is a locked brick at random
+            if math.random(1, 20) == 1 then
+                b.color = 6
+                b.tier = 1
+            end
+
             table.insert(bricks, b)
 
             -- Lua's version of the 'continue' statement
@@ -112,7 +120,7 @@ function LevelMaker.createMap(level)
 
     -- in the event we didn't generate any bricks, try again
     if #bricks == 0 then
-        return self.createMap(level)
+        return LevelMaker.createMap(level)
     else
         return bricks
     end

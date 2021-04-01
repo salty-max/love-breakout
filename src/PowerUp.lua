@@ -12,7 +12,7 @@
 
 PowerUp = Class{}
 
-function PowerUp:init(type, x, y)
+function PowerUp:init(x, y)
   self.type = type
   self.x = x
   self.y = y

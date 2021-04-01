@@ -39,6 +39,12 @@ paletteColors = {
         ['r'] = 251,
         ['g'] = 242,
         ['b'] = 54
+    },
+    -- gold
+    [6] = {
+        ['r'] = 89,
+        ['g'] = 86,
+        ['b'] = 82
     }
 }
 
@@ -99,19 +105,28 @@ function Brick:hit()
     
     -- if brick is at a higher tier than the base, go down a tier
     -- if it is already at the lowest color, go down a color
-    if self.tier > 0 then
-        if self.color == 1 then
+    -- if it is locked, go down a tier to unlock it
+    if self.color == 6 then
+        if self.tier > 0 then
             self.tier = self.tier - 1
-            self.color = 5
         else
-            self.color = self.color - 1
+            self.inPlay = false
         end
     else
-        -- if brick is at the first tier and the base color, remove it
-        if self.color == 1 then
-            self.inPlay = false
+        if self.tier > 0 then
+            if self.color == 1 then
+                self.tier = self.tier - 1
+                self.color = 5
+            else
+                self.color = self.color - 1
+            end
         else
-            self.color = self.color - 1
+            -- if brick is at the first tier and the base color, remove it
+            if self.color == 1 then
+                self.inPlay = false
+            else
+                self.color = self.color - 1
+            end
         end
     end
 
@@ -129,7 +144,7 @@ end
 function Brick:render()
     if self.inPlay then
         love.graphics.draw(
-            gTextures['main'],
+            gTextures['bricks'],
             -- multiply color by 4 (-1) to get color offset, then add tier
             -- to draw the correct tier and color brick
             gFrames['bricks'][1 + ((self.color - 1) * 4) + self.tier],

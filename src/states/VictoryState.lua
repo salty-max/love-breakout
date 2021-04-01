@@ -17,6 +17,7 @@ function VictoryState:enter(params)
     self.health = params.health
     self.highScores = params.highScores
     self.recoverPoints = params.recoverPoints
+    self.playerHasKey = params.playerHasKey
 
     -- remove balls from table until there is only one left
     for i = 1, #self.balls - 1 do
@@ -42,7 +43,8 @@ function VictoryState:update(dt)
             paddle = self.paddle,
             bricks = LevelMaker.createMap(self.level + 1),
             highScores = self.highScores,
-            recoverPoints = self.recoverPoints
+            recoverPoints = self.recoverPoints,
+            playerHasKey = self.playerHasKey
         })
     end
 end

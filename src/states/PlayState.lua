@@ -19,6 +19,7 @@ function PlayState:enter(params)
     self.level = params.level
     self.highScores = params.highScores
     self.recoverPoints = params.recoverPoints
+    self.playerHasKey = params.playerHasKey
 
     self.powerUpSpawnTimer = 0
     self.powerups = {}
@@ -49,7 +50,9 @@ function PlayState:update(dt)
     -- spawn a random powerup every given time
     self.powerUpSpawnTimer = self.powerUpSpawnTimer + dt
     if self.powerUpSpawnTimer > POWERUP_SPAWN_INTERVAL then
-        table.insert(self.powerups, PowerUp(9, math.random(0, VIRTUAL_WIDTH - 16), -16))
+        local powerup = PowerUp(math.random(0, VIRTUAL_WIDTH - 16), -16)
+        powerup.type = math.random(9, 10)
+        table.insert(self.powerups, powerup)
         self.powerUpSpawnTimer = 0
     end
 
@@ -72,8 +75,15 @@ function PlayState:update(dt)
                     ball.dy = math.random(-50, -60)
                     table.insert(self.balls, ball)
                 end
+            -- key
+            elseif pup.type == 10 then
+                self.playerHasKey = true
             end
 
+            gSounds['powerup']:stop()
+            gSounds['powerup']:play()
+
+            -- remove powerup from game to avoid multiple activations
             table.remove(self.powerups, k)
         end
     end
@@ -109,10 +119,24 @@ function PlayState:update(dt)
             brick:update(dt)
             -- only check for bricks in play
             if brick.inPlay and ball:collides(brick) then
-                -- add to score
-                self.score = self.score + (brick.tier * BASE_SCORE_PER_TIER + brick.color * BASE_SCORE_PER_COLOR)
+                -- if brick is locked
+                if brick.color == 6 and brick.tier == 1 then
+                    if self.playerHasKey then
+                         -- add to score + bonus locked brick
+                        self.score = self.score + (brick.color * BASE_SCORE_PER_TIER)
+                        
+                        -- unlock it
+                        brick:hit()
+                        self.playerHasKey = false
+                    else
+                        gSounds['locked']:play()
+                    end
+                else
+                    -- add to score
+                    self.score = self.score + (brick.tier * BASE_SCORE_PER_TIER + brick.color * BASE_SCORE_PER_COLOR)
 
-                brick:hit()
+                    brick:hit()
+                end
 
                 -- recover health and expand paddle if enough points
                 if self.score > self.recoverPoints then
@@ -137,7 +161,8 @@ function PlayState:update(dt)
                         score = self.score,
                         balls = self.balls,
                         highScores = self.highScores,
-                        recoverPoints = self.recoverPoints
+                        recoverPoints = self.recoverPoints,
+                        playerHasKey = self.playerHasKey
                     })
                 end
 
@@ -203,7 +228,8 @@ function PlayState:update(dt)
                         score = self.score,
                         level = self.level,
                         highScores = self.highScores,
-                        recoverPoints = self.recoverPoints
+                        recoverPoints = self.recoverPoints,
+                        playerhasKey = self.playerHasKey
                     })
                 end
             end
@@ -234,6 +260,9 @@ function PlayState:render()
     renderHealth(self.health)
     renderScore(self.score)
     renderLevel(self.level)
+    if self.playerHasKey then
+        renderKey()
+    end
 
     -- pause text, if paused
     if self.paused then
