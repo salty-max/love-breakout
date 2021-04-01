@@ -13,18 +13,25 @@ function VictoryState:enter(params)
     self.level = params.level
     self.score = params.score
     self.paddle = params.paddle
-    self.ball = params.ball
+    self.balls = params.balls
     self.health = params.health
     self.highScores = params.highScores
     self.recoverPoints = params.recoverPoints
+
+    -- remove balls from table until there is only one left
+    for i = 1, #self.balls - 1 do
+        table.remove(self.balls, i)
+    end
 end
 
 function VictoryState:update(dt)
     self.paddle:update(dt)
 
-    -- have the ball track the player
-    self.ball.x = self.paddle.x + (self.paddle.width / 2) - self.ball.width / 2
-    self.ball.y = self.paddle.y - self.ball.height
+    for k, ball in pairs(self.balls) do
+        -- have the ball track the player
+        ball.x = self.paddle.x + (self.paddle.width / 2) - ball.width / 2
+        ball.y = self.paddle.y - ball.height
+    end
 
     -- go to play state if enter is pressed
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
@@ -42,7 +49,10 @@ end
 
 function VictoryState:render()
     self.paddle:render()
-    self.ball:render()
+    
+    for k, ball in pairs(self.balls) do
+        ball:render()
+    end
 
     renderHealth(self.health)
     renderScore(self.score)
