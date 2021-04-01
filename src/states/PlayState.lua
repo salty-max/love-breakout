@@ -181,6 +181,10 @@ function PlayState:update(dt)
             if #self.balls > 1 then
                 table.remove(self.balls, k)
             else
+                -- shrink paddle
+                if self.paddle.size > 1 then
+                    self.paddle.size = self.paddle.size - 1
+                end
                 self.health = self.health - 1
                 gSounds['hurt']:play()
 

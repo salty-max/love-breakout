@@ -40,6 +40,9 @@ function Paddle:update(dt)
         self.dx = 0
     end
 
+    -- update width depending on size
+    self.width = 32 * self.size
+
     -- clamp X so the paddle doesn't go out of bounds
     if self.dx < 0 then
         self.x = math.max(0, self.x + self.dx * dt)
