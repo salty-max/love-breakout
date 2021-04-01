@@ -1,6 +1,6 @@
 --[[
     UTILITY FUNCTIONS
-    CS50G Project 3
+    CS50G Project 2
     Breakout
     Author: Maxime Blanc
     https://github.com/salty-max
