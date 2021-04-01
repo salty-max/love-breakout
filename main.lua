@@ -74,6 +74,7 @@ function love.load()
         ['start'] = function() return StartState() end,
         ['serve'] = function() return ServeState() end,
         ['play'] = function() return PlayState() end,
+        ['victory'] = function() return VictoryState() end,
         ['game-over'] = function() return GameOverState() end
     }
     gStateMachine:change('start')
@@ -167,10 +168,19 @@ function renderScore(score)
 end
 
 --[[
-    Renders the current FPS
+    Renders the level the player currently is at the top right.
+--]]
+function renderLevel(level)
+    love.graphics.setFont((gFonts['small']))
+    love.graphics.print('Level ', 5, 5)
+    love.graphics.print(tostring(level), 30, 5)
+end
+
+--[[
+    Renders the current FPS.
 --]]
 function displayFPS()
     love.graphics.setFont(gFonts['small'])
     love.graphics.setColor(0, 1, 0, 1)
-    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 5, 5)
+    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 5, 20)
 end

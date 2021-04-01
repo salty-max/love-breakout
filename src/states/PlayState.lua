@@ -75,6 +75,20 @@ function PlayState:update(dt)
             self.score = self.score + (brick.tier * BASE_SCORE_PER_TIER + brick.color * BASE_SCORE_PER_COLOR)
 
             brick:hit()
+
+            -- go to victory screen if there are no more bricks left
+            if self:checkVictory() then
+                gSounds['victory']:play()
+
+                gStateMachine:change('victory', {
+                    level = self.level,
+                    paddle = self.paddle,
+                    health = self.health,
+                    score = self.score,
+                    ball = self.ball
+                })
+            end
+
             --
             -- brick collision code
             --
@@ -149,10 +163,21 @@ function PlayState:render()
 
     renderHealth(self.health)
     renderScore(self.score)
+    renderLevel(self.level)
 
     -- pause text, if paused
     if self.paused then
         love.graphics.setFont(gFonts['large'])
         love.graphics.printf('PAUSE', 0, VIRTUAL_HEIGHT / 3, VIRTUAL_WIDTH, 'center')
     end
+end
+
+function PlayState:checkVictory()
+    for k, brick in pairs(self.bricks) do
+        if brick.inPlay then
+            return false
+        end
+    end
+
+    return true
 end
